@@ -1,10 +1,13 @@
 const natural = require("natural");
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors())
 
 const port = process.env.PORT || 8080;
 
@@ -28,10 +31,10 @@ classifier.addDocument("cheesy", "eating");
 classifier.train();
 
 router.get("/messages", (req, res) => {
-    const userMessage = req.body.text;
+    const userMessage = req.query.message;
     const intent = classifier.classify(userMessage);
     if (intent === "greeting") {
-        res.send("Hello User! Good to have you hear");
+        res.json({ reply: "Hello User! Good to have you hear"});
     }
     else if (intent === "order") {
         res.send("Your order is processing, please allow around 30 minutes");
